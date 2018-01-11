@@ -11,7 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "exec-ssh": "git+https://github.com/poohitan-blog/exec-ssh.git",
     "express": "^4.16.2",
+    "logger": "git+https://github.com/poohitan-blog/logger.git",
     "mime-types": "^2.1.17",
     "request": "^2.83.0",
     "require-dir": "^0.3.2",
@@ -22,7 +24,6 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
     "nodemon": "^1.11.0",
-    "ssh2": "^0.5.5",
     "yargs": "^10.1.1"
   }
 }

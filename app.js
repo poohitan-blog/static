@@ -1,4 +1,5 @@
 const express = require('express');
+const Logger = require('logger');
 
 const config = require('./config').current;
 const errorHandler = require('./middlewares/error-handler');
@@ -22,4 +23,4 @@ app.use(errorHandler);
 
 app.listen(config.port);
 
-console.log('Listening on port', config.port);
+Logger.log('Listening on port', config.port);
