@@ -5,7 +5,7 @@ const config = {
     digitalOcean: {
       spaces: {
         name: 'poohitan-com',
-        endpoint: 'ams3.digitaloceanspaces.com',
+        endpoint: 'ams3.cdn.digitaloceanspaces.com',
       },
     },
   },
@@ -31,7 +31,7 @@ const config = {
     digitalOcean: {
       spaces: {
         name: 'poohitan-com',
-        endpoint: 'ams3.digitaloceanspaces.com',
+        endpoint: 'ams3.cdn.digitaloceanspaces.com',
       },
     },
   },
