@@ -10,7 +10,7 @@ const errorHandler = require('../middlewares/error-handler');
 const router = express.Router();
 
 const PREVIEW_PARAM = ':preview';
-const PREVIEW_WIDTH = 590;
+const PREVIEW_WIDTH = 600;
 const PREVIEW_BLUR = 35;
 
 function generatePreview() {
