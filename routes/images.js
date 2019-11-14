@@ -11,12 +11,14 @@ const router = express.Router();
 
 const PREVIEW_PARAM = ':preview';
 const PREVIEW_WIDTH = 600;
-const PREVIEW_BLUR = 35;
+const PREVIEW_BLUR = 40;
+const PREVIEW_QUALITY = 20;
 
 function generatePreview() {
   return sharp()
     .resize(PREVIEW_WIDTH, null, { withoutEnlargement: true })
-    .blur(PREVIEW_BLUR);
+    .blur(PREVIEW_BLUR)
+    .jpeg({ quality: PREVIEW_QUALITY });
 }
 
 router.get('/:filename', (req, res, next) => {
