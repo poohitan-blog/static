@@ -15,8 +15,7 @@ const PREVIEW_BLUR = 35;
 
 function generatePreview() {
   return sharp()
-    .resize(PREVIEW_WIDTH, null)
-    .withoutEnlargement()
+    .resize(PREVIEW_WIDTH, null, { withoutEnlargement: true })
     .blur(PREVIEW_BLUR);
 }
 
