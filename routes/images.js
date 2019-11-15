@@ -1,7 +1,9 @@
 const express = require('express');
 const request = require('request');
+const requestPromise = require('request-promise-native');
 const mime = require('mime-types');
 const sharp = require('sharp');
+const etag = require('etag');
 
 const config = require('../config').current;
 
@@ -14,30 +16,32 @@ const PREVIEW_WIDTH = 600;
 const PREVIEW_BLUR = 40;
 const PREVIEW_QUALITY = 20;
 
-function generatePreview() {
-  return sharp()
+function generatePreview(image) {
+  return sharp(image)
     .resize(PREVIEW_WIDTH, null, { withoutEnlargement: true })
     .blur(PREVIEW_BLUR)
-    .jpeg({ quality: PREVIEW_QUALITY });
+    .jpeg({ quality: PREVIEW_QUALITY })
+    .toBuffer();
 }
 
-router.get('/:filename', (req, res, next) => {
+router.get('/:filename', async (req, res, next) => {
   const { filename } = req.params;
   const previewRequested = filename.includes(PREVIEW_PARAM);
   const originalFilename = previewRequested ? filename.replace(PREVIEW_PARAM, '') : filename;
   const originalURL = `https://${config.digitalOcean.spaces.name}.${config.digitalOcean.spaces.endpoint}/${config.environment}/images/${originalFilename}`;
 
-  res.header({
+  res.set({
     'Content-Disposition': 'inline',
     'Content-Type': mime.lookup(originalFilename),
   });
 
   if (previewRequested) {
-    return request(originalURL)
-      .pipe(generatePreview())
-      .on('error', () => next(`Invalid image ${req.params.filename}`))
-      .pipe(res)
-      .on('error', error => next(error));
+    const image = await requestPromise(originalURL, { encoding: null });
+    const preview = await generatePreview(image);
+
+    res.set('ETag', etag(preview));
+
+    return res.send(preview);
   }
 
   return request(originalURL)
