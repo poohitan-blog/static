@@ -21,14 +21,12 @@ function generatePlaceholder(image) {
   return sharp(image)
     .resize(PREVIEW_WIDTH, null, { withoutEnlargement: true })
     .blur(PREVIEW_BLUR)
-    .jpeg()
     .toBuffer();
 }
 
 function resize(image, { width, height }) {
   return sharp(image)
     .resize(width, height, { withoutEnlargement: true })
-    .jpeg()
     .toBuffer();
 }
 
