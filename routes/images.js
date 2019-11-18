@@ -11,37 +11,56 @@ const errorHandler = require('../middlewares/error-handler');
 
 const router = express.Router();
 
-const PREVIEW_PARAM = ':preview';
-const PREVIEW_WIDTH = 600;
-const PREVIEW_BLUR = 40;
-const PREVIEW_QUALITY = 20;
+const PREVIEW_WIDTH = 100;
+const PREVIEW_BLUR = 10;
 
-function generatePreview(image) {
+const { name: spacesName, endpoint: spacesEndpoint } = config.digitalOcean.spaces;
+const { environment } = config;
+
+function generatePlaceholder(image) {
   return sharp(image)
     .resize(PREVIEW_WIDTH, null, { withoutEnlargement: true })
     .blur(PREVIEW_BLUR)
-    .jpeg({ quality: PREVIEW_QUALITY })
+    .jpeg()
+    .toBuffer();
+}
+
+function resize(image, { width, height }) {
+  return sharp(image)
+    .resize(width, height, { withoutEnlargement: true })
+    .jpeg()
     .toBuffer();
 }
 
 router.get('/:filename', async (req, res, next) => {
   const { filename } = req.params;
-  const previewRequested = filename.includes(PREVIEW_PARAM);
-  const originalFilename = previewRequested ? filename.replace(PREVIEW_PARAM, '') : filename;
-  const originalURL = `https://${config.digitalOcean.spaces.name}.${config.digitalOcean.spaces.endpoint}/${config.environment}/images/${originalFilename}`;
+  const { width, height, placeholder } = req.query;
+  const originalURL = `https://${spacesName}.${spacesEndpoint}/${environment}/images/${filename}`;
 
   res.set({
     'Content-Disposition': 'inline',
-    'Content-Type': mime.lookup(originalFilename),
+    'Content-Type': mime.lookup(filename),
   });
 
-  if (previewRequested) {
+  if (placeholder) {
     const image = await requestPromise(originalURL, { encoding: null });
-    const preview = await generatePreview(image);
+    const preview = await generatePlaceholder(image);
 
     res.set('ETag', etag(preview));
 
     return res.send(preview);
+  }
+
+  if (width || height) {
+    const image = await requestPromise(originalURL, { encoding: null });
+    const resizedImage = await resize(image, {
+      width: width ? Number(width) : undefined,
+      height: height ? Number(height) : undefined,
+    });
+
+    res.set('ETag', etag(resizedImage));
+
+    return res.send(resizedImage);
   }
 
   return request(originalURL)
