@@ -24,7 +24,11 @@ function generatePlaceholder(image) {
     .toBuffer();
 }
 
-function resize(image, { width, height }) {
+function resize(image, { width, height, mimeType }) {
+  if (mimeType === 'image/gif') { // resizing brakes animations
+    return image;
+  }
+
   return sharp(image)
     .resize(width, height, { withoutEnlargement: true })
     .toBuffer();
@@ -35,9 +39,11 @@ router.get('/:filename', async (req, res, next) => {
   const { width, height, placeholder } = req.query;
   const originalURL = `https://${spacesName}.${spacesEndpoint}/${environment}/images/${filename}`;
 
+  const mimeType = mime.lookup(filename);
+
   res.set({
     'Content-Disposition': 'inline',
-    'Content-Type': mime.lookup(filename),
+    'Content-Type': mimeType,
   });
 
   if (placeholder) {
@@ -54,6 +60,7 @@ router.get('/:filename', async (req, res, next) => {
     const resizedImage = await resize(image, {
       width: width ? Number(width) : undefined,
       height: height ? Number(height) : undefined,
+      mimeType,
     });
 
     res.set('ETag', etag(resizedImage));
