@@ -11,7 +11,7 @@ const errorHandler = require('../middlewares/error-handler');
 
 const router = express.Router();
 
-const PREVIEW_WIDTH = 100;
+const PREVIEW_WIDTH = 200;
 const PREVIEW_BLUR = 10;
 
 const { name: spacesName, endpoint: spacesEndpoint } = config.digitalOcean.spaces;
