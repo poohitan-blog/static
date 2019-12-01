@@ -42,7 +42,7 @@ const environment = process.env.NODE_ENV;
 module.exports = {
   ...config,
   current: {
-    ...environment,
+    environment,
     ...config[environment],
   },
 };
