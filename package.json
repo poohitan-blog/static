@@ -7,13 +7,12 @@
     "start": "pm2-dev app.js",
     "lint": "./node_modules/eslint/bin/eslint.js \"**/*.js\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "node tasks/deploy.js -e production -b master"
+    "deploy": "pm2 deploy production"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "etag": "^1.8.1",
-    "exec-ssh": "git+https://github.com/poohitan-blog/exec-ssh.git",
     "express": "^4.16.2",
     "logger": "git+https://github.com/poohitan-blog/logger.git",
     "mime-types": "^2.1.17",
@@ -25,7 +24,6 @@
   "devDependencies": {
     "eslint": "^4.15.0",
     "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.8.0",
-    "yargs": "^10.1.1"
+    "eslint-plugin-import": "^2.8.0"
   }
 }
