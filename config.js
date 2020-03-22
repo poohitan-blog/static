@@ -13,21 +13,6 @@ const config = {
   production: {
     port: 3100,
 
-    server: {
-      host: '46.101.99.203',
-      username: 'poohitan',
-      folder: '~/poohitan.com/static',
-    },
-
-    git: {
-      repo: 'git@github.com:poohitan-blog/static.git',
-      branch: 'stable',
-    },
-
-    pm2: {
-      appName: 'poohitan-com-static',
-    },
-
     digitalOcean: {
       spaces: {
         name: 'poohitan-com',
