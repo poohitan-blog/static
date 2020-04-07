@@ -11,8 +11,7 @@ const errorHandler = require('../middlewares/error-handler');
 
 const router = express.Router();
 
-const PREVIEW_WIDTH = 200;
-const PREVIEW_BLUR = 10;
+const PREVIEW_WIDTH = 30;
 
 const { name: spacesName, endpoint: spacesEndpoint } = config.digitalOcean.spaces;
 const { environment } = config;
@@ -20,7 +19,6 @@ const { environment } = config;
 function generatePlaceholder(image) {
   return sharp(image)
     .resize(PREVIEW_WIDTH, null, { withoutEnlargement: true })
-    .blur(PREVIEW_BLUR)
     .toBuffer();
 }
 
