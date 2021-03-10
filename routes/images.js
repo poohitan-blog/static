@@ -1,6 +1,5 @@
 const express = require('express');
-const request = require('request');
-const requestPromise = require('request-promise-native');
+const got = require('got');
 const mime = require('mime-types');
 const sharp = require('sharp');
 const etag = require('etag');
@@ -45,7 +44,7 @@ router.get('/:filename', async (req, res, next) => {
   });
 
   if (placeholder) {
-    const image = await requestPromise(originalURL, { encoding: null });
+    const image = await got(originalURL).buffer();
     const preview = await generatePlaceholder(image);
 
     res.set('ETag', etag(preview));
@@ -54,7 +53,7 @@ router.get('/:filename', async (req, res, next) => {
   }
 
   if (width || height) {
-    const image = await requestPromise(originalURL, { encoding: null });
+    const image = await got(originalURL).buffer();
     const resizedImage = await resize(image, {
       width: width ? Number(width) : undefined,
       height: height ? Number(height) : undefined,
@@ -66,9 +65,9 @@ router.get('/:filename', async (req, res, next) => {
     return res.send(resizedImage);
   }
 
-  return request(originalURL)
+  return got.stream(originalURL)
     .pipe(res)
-    .on('error', error => next(error));
+    .on('error', (error) => next(error));
 });
 
 router.use(errorHandler);
