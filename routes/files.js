@@ -1,5 +1,5 @@
 const express = require('express');
-const request = require('request');
+const got = require('got');
 const mime = require('mime-types');
 
 const config = require('../config').current;
@@ -7,17 +7,21 @@ const errorHandler = require('../middlewares/error-handler');
 
 const router = express.Router();
 
+const { name: spacesName, endpoint: spacesEndpoint } = config.digitalOcean.spaces;
+const { environment } = config;
+
 router.get('/:filename', (req, res, next) => {
-  const originalURL = `https://${config.digitalOcean.spaces.name}.${config.digitalOcean.spaces.endpoint}/${config.environment}/files/${req.params.filename}`;
+  const { filename } = req.params;
+  const originalURL = `https://${spacesName}.${spacesEndpoint}/${environment}/files/${filename}`;
 
   res.header({
     'Content-Disposition': 'attachment',
-    'Content-Type': mime.lookup(req.params.filename),
+    'Content-Type': mime.lookup(filename),
   });
 
-  request(originalURL)
+  got.stream(originalURL)
     .pipe(res)
-    .on('error', error => next(error));
+    .on('error', (error) => next(error));
 });
 
 router.use(errorHandler);
