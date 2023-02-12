@@ -14,7 +14,7 @@
   "dependencies": {
     "etag": "^1.8.1",
     "express": "^4.16.2",
-    "got": "^11.8.2",
+    "got": "^12.5.3",
     "logger": "git+https://github.com/poohitan-blog/logger.git",
     "mime-types": "^2.1.17",
     "require-dir": "^0.3.2",
