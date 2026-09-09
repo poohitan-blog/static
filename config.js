@@ -2,6 +2,10 @@ const config = {
   development: {
     port: 3500,
 
+    allowedOrigins: [
+      '*',
+    ],
+
     digitalOcean: {
       spaces: {
         name: 'poohitan-com',
@@ -12,6 +16,13 @@ const config = {
 
   production: {
     port: 3100,
+
+    allowedOrigins: [
+      'https://poohitan.com',
+      'https://www.poohitan.com',
+      'https://bloody-eye.com',
+      'https://www.bloody-eye.com',
+    ],
 
     digitalOcean: {
       spaces: {

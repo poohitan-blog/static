@@ -2,10 +2,13 @@ const express = require('express');
 const Logger = require('logger');
 
 const config = require('./config').current;
+const cors = require('./middlewares/cors');
 const errorHandler = require('./middlewares/error-handler');
 const routes = require('./routes');
 
 const app = express();
+
+app.use(cors);
 
 app.get('/', (req, res) => {
   res.send('Іди геть.');
